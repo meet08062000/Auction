@@ -53,7 +53,8 @@ public class organizerPortal extends AppCompatActivity {
                 }
                 else if(position==3)
                 {
-
+                    Intent intent = new Intent(organizerPortal.this,AddAuction.class);
+                    startActivity(intent);
                 }
                 else if(position==4)
                 {
