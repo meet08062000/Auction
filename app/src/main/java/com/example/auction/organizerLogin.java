@@ -96,8 +96,8 @@ public class organizerLogin extends AppCompatActivity {
 
         if(emailflag){
             Toast.makeText(organizerLogin.this, "Login successful", Toast.LENGTH_SHORT).show();
-            finish();
             startActivity(new Intent(organizerLogin.this,organizerPortal.class));
+            finish();
         }
         else
         {

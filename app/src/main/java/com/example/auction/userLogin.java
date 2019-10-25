@@ -98,8 +98,8 @@ public class userLogin extends AppCompatActivity {
         if(emailflag)
         {
             Toast.makeText(userLogin.this, "Login successful", Toast.LENGTH_SHORT).show();
-            finish();
             startActivity(new Intent(userLogin.this,userPortal.class));
+            finish();
         }
         else
         {
