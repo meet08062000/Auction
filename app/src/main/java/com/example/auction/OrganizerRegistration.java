@@ -2,6 +2,7 @@ package com.example.auction;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,8 +16,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class OrganizerRegistration extends AppCompatActivity {
+
+    private static final String TAG = "OrganizerRegistration";
 
     private EditText orgFname;
     private EditText orgLname;
@@ -25,11 +30,14 @@ public class OrganizerRegistration extends AppCompatActivity {
     private EditText orgRetype;
     private Button ogSubmit;
     private FirebaseAuth firebaseAuth;
+    private String fname,lname,email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_organizer_registration);
+
+        Log.d(TAG, "onCreate: ");
 
         orgFname=(EditText)findViewById(R.id.firstName);
         orgLname=(EditText)findViewById(R.id.lastName);
@@ -41,6 +49,9 @@ public class OrganizerRegistration extends AppCompatActivity {
         ogSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                fname=orgFname.getText().toString();
+                lname=orgLname.getText().toString();
+                email=organizerUid.getText().toString();
                 storeOrg(orgFname.getText().toString(),orgLname.getText().toString(),organizerUid.getText().toString(),orgPw.getText().toString(),orgRetype.getText().toString());
             }
         });
@@ -112,6 +123,8 @@ public class OrganizerRegistration extends AppCompatActivity {
                 public void onComplete(@NonNull Task<Void> task) {
                     if(task.isSuccessful())
                     {
+                        Log.d(TAG, "onComplete: Called ");
+                        sendUserData();
                         Toast.makeText(OrganizerRegistration.this,"Successfully Registered, please verify your email",Toast.LENGTH_SHORT).show();
                         firebaseAuth.signOut();
                         finish();
@@ -124,5 +137,14 @@ public class OrganizerRegistration extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private void sendUserData()
+    {
+        Log.d(TAG, "called");
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = firebaseDatabase.getReference("Users");
+        Organizer org = new Organizer("Meet","Shah","meet8june@gmail.com");
+        myRef.child("sklsdjfklasjdf").setValue(org);
     }
 }

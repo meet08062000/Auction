@@ -15,6 +15,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class UserRegistration extends AppCompatActivity {
 
@@ -85,6 +87,11 @@ public class UserRegistration extends AppCompatActivity {
                     if(task.isSuccessful())
                     {
                         sendEmailVerification();
+                        /*sendUserData();
+                        Toast.makeText(UserRegistration.this,"Successfully Registered, please verify your email",Toast.LENGTH_SHORT).show();
+                        firebaseAuth.signOut();
+                        finish();
+                        startActivity(new Intent(UserRegistration.this,userLogin.class));*/
                     }
                     else
                     {
@@ -112,6 +119,7 @@ public class UserRegistration extends AppCompatActivity {
                 public void onComplete(@NonNull Task<Void> task) {
                     if(task.isSuccessful())
                     {
+                        sendUserData();
                         Toast.makeText(UserRegistration.this,"Successfully Registered, please verify your email",Toast.LENGTH_SHORT).show();
                         firebaseAuth.signOut();
                         finish();
@@ -124,6 +132,14 @@ public class UserRegistration extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private void sendUserData()
+    {
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = firebaseDatabase.getReference(firebaseAuth.getUid());
+        User user = new User(usFname.getText().toString(),usLname.getText().toString(),userUid.getText().toString());
+        myRef.setValue(user);
     }
 
 }

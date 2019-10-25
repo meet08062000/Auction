@@ -24,8 +24,8 @@ public class MainActivity extends AppCompatActivity {
 
         userVar=(Button) findViewById(R.id.user);
         organizerVar=(Button) findViewById(R.id.organizer);
-        userLogOn=(Button)findViewById(R.id.signUpAsOrg);
-        organizerLogOn=(Button)findViewById(R.id.signUpAsUsr);
+        userLogOn=(Button)findViewById(R.id.signUpAsUsr);
+        organizerLogOn=(Button)findViewById(R.id.signUpAsOrg);
 
         userVar.setOnClickListener(new View.OnClickListener() {
             @Override
