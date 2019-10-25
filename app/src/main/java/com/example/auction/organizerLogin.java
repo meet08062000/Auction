@@ -1,9 +1,5 @@
 package com.example.auction;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -11,6 +7,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -75,8 +74,7 @@ public class organizerLogin extends AppCompatActivity {
                 if (task.isSuccessful())
                 {
                     finish();
-                    startActivity(new Intent(organizerLogin.this, organizerPortal.class));
-                    Toast.makeText(organizerLogin.this, "Login successful", Toast.LENGTH_SHORT).show();
+
                 }
                 else {
                     Toast.makeText(organizerLogin.this, "Login Failed", Toast.LENGTH_SHORT).show();
@@ -92,5 +90,20 @@ public class organizerLogin extends AppCompatActivity {
 
     }
 
+    private void checkEmailVerification(){
+        FirebaseUser firebaseUser = firebaseAuth.getInstance().getCurrentUser();
+        Boolean emailflag = firebaseUser.isEmailVerified();
+
+        if(emailflag){
+            Toast.makeText(organizerLogin.this, "Login successful", Toast.LENGTH_SHORT).show();
+            finish();
+            startActivity(new Intent(organizerLogin.this,organizerPortal.class));
+        }
+        else
+        {
+            Toast.makeText(this,"Verify your Email",Toast.LENGTH_SHORT).show();
+            firebaseAuth.signOut();
+        }
+    }
 
 }

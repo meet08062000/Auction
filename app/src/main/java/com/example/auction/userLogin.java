@@ -1,8 +1,5 @@
 package com.example.auction;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +7,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -75,9 +75,7 @@ public class userLogin extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful())
                 {
-                    finish();
-                    startActivity(new Intent(userLogin.this, userPortal.class));
-                    Toast.makeText(userLogin.this, "Login successful", Toast.LENGTH_SHORT).show();
+                    checkEmailVerification();
                 }
                 else {
                     Toast.makeText(userLogin.this, "Login Failed", Toast.LENGTH_SHORT).show();
@@ -93,4 +91,21 @@ public class userLogin extends AppCompatActivity {
 
     }
 
+    private void checkEmailVerification(){
+        FirebaseUser firebaseUser = firebaseAuth.getInstance().getCurrentUser();
+        Boolean emailflag = firebaseUser.isEmailVerified();
+
+        if(emailflag)
+        {
+            Toast.makeText(userLogin.this, "Login successful", Toast.LENGTH_SHORT).show();
+            finish();
+            startActivity(new Intent(userLogin.this,userPortal.class));
+        }
+        else
+        {
+            Toast.makeText(this,"Verify your Email",Toast.LENGTH_SHORT).show();
+            firebaseAuth.signOut();
+        }
     }
+
+}

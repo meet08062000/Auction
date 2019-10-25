@@ -14,6 +14,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class OrganizerRegistration extends AppCompatActivity {
 
@@ -82,9 +83,7 @@ public class OrganizerRegistration extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful())
                     {
-                        Toast.makeText(OrganizerRegistration.this, "Registration successful!!", Toast.LENGTH_SHORT).show();
-                        FirebaseAuth.getInstance().signOut();
-                        finish();
+                        sendEmailVerification();
                     }
                     else
                     {
@@ -93,19 +92,37 @@ public class OrganizerRegistration extends AppCompatActivity {
                     }
                 }
             });
-            Intent intent = new Intent(OrganizerRegistration.this,MainActivity.class);
-            finish();
-            startActivity(intent);
 
         }
 
         else
         {
-
             Toast.makeText(getApplicationContext(),"Your retyped password does not match your original password",Toast.LENGTH_LONG).show();
-
         }
 
     }
 
+    private void sendEmailVerification()
+    {
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        if(firebaseUser!=null)
+        {
+            firebaseUser.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if(task.isSuccessful())
+                    {
+                        Toast.makeText(OrganizerRegistration.this,"Successfully Registered, please verify your email",Toast.LENGTH_SHORT).show();
+                        firebaseAuth.signOut();
+                        finish();
+                        startActivity(new Intent(OrganizerRegistration.this,organizerLogin.class));
+                    }
+                    else
+                    {
+                        Toast.makeText(OrganizerRegistration.this,"Verification mail has not been sent, please check your internet connection.",Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+    }
 }
