@@ -2,11 +2,14 @@ package com.example.auction;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,7 +30,6 @@ public class userPortal extends AppCompatActivity {
 
         names.add("All auctions");
         names.add("Your auctions");
-        names.add("Logout");
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, names);
         usrList.setAdapter(adapter);
@@ -43,15 +45,33 @@ public class userPortal extends AppCompatActivity {
                 {
 
                 }
-                else if(position==2)
-                {
-                    FirebaseAuth.getInstance().signOut();
-                    finish();
-                    Intent intent = new Intent(userPortal.this,MainActivity.class);
-                    startActivity(intent);
-                }
             }
         });
 
+    }
+
+    private void Logout()
+    {
+        FirebaseAuth.getInstance().signOut();
+        finish();
+        Intent intent = new Intent(userPortal.this,MainActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.user_menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch(item.getItemId())
+        {
+            case R.id.logoutMenu: {
+                Logout();
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
