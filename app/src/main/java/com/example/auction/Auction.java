@@ -7,7 +7,7 @@ class Auction
 {
     public String name;
     public List<ObjectToBeSold> items= new ArrayList<>();
-    //public Organizer organizer = new Organizer();
+    public Organizer organizer = new Organizer();
 
     /*public Auction(String name, List<ObjectToBeSold> items, Organizer organizer) {
         this.name = name;

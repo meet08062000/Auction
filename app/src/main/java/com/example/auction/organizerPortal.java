@@ -42,8 +42,7 @@ public class organizerPortal extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(position==0)
                 {
-                    Intent intent = new Intent(organizerPortal.this,UserRegistration.class);
-                    startActivity(intent);
+
                 }
                 else if(position==1)
                 {
