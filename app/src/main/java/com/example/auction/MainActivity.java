@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
         userVar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
                 Intent intent = new Intent(MainActivity.this,userLogin.class);
                 startActivity(intent);
             }
@@ -39,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
         organizerVar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
                 Intent intent = new Intent(MainActivity.this,organizerLogin.class);
                 startActivity(intent);
             }
@@ -48,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
         userLogOn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
                 Intent intent = new Intent(MainActivity.this,UserRegistration.class);
                 startActivity(intent);
             }
@@ -57,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
         organizerLogOn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
                 Intent intent = new Intent(MainActivity.this,OrganizerRegistration.class);
                 startActivity(intent);
             }

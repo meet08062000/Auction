@@ -28,7 +28,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="405dp"
             android:ems="10"
-            android:hint="Password"
+            android:hint="Password (min 6 characters)"
             android:inputType="textPassword" />
 
         <EditText

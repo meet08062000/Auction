@@ -46,8 +46,16 @@ public class userLogin extends AppCompatActivity {
 
         if(user!=null)
         {
-            finish();
-            startActivity(new Intent(userLogin.this,userPortal.class));
+            boolean emailverify = checkEmailVerification();
+            if(emailverify)
+            {
+                finish();
+                startActivity(new Intent(userLogin.this,userPortal.class));
+            }
+            else
+            {
+                firebaseAuth.signOut();
+            }
         }
 
 
@@ -91,7 +99,7 @@ public class userLogin extends AppCompatActivity {
 
     }
 
-    private void checkEmailVerification(){
+    private boolean checkEmailVerification(){
         FirebaseUser firebaseUser = firebaseAuth.getInstance().getCurrentUser();
         Boolean emailflag = firebaseUser.isEmailVerified();
 
@@ -100,11 +108,13 @@ public class userLogin extends AppCompatActivity {
             Toast.makeText(userLogin.this, "Login successful", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(userLogin.this,userPortal.class));
             finish();
+            return true;
         }
         else
         {
             Toast.makeText(this,"Verify your Email",Toast.LENGTH_SHORT).show();
             firebaseAuth.signOut();
+            return false;
         }
     }
 

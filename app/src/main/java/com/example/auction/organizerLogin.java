@@ -46,8 +46,16 @@ public class organizerLogin extends AppCompatActivity {
 
         if(organizer!=null)
         {
-            finish();
-            startActivity(new Intent(organizerLogin.this,organizerPortal.class));
+            boolean emailverify = checkEmailVerification();
+            if(emailverify)
+            {
+                finish();
+                startActivity(new Intent(organizerLogin.this,organizerPortal.class));
+            }
+            else
+            {
+                firebaseAuth.signOut();
+            }
         }
 
         log.setOnClickListener(new View.OnClickListener() {
@@ -90,19 +98,21 @@ public class organizerLogin extends AppCompatActivity {
 
     }
 
-    private void checkEmailVerification(){
+    private boolean checkEmailVerification(){
         FirebaseUser firebaseUser = firebaseAuth.getInstance().getCurrentUser();
-        Boolean emailflag = firebaseUser.isEmailVerified();
+        boolean emailflag = firebaseUser.isEmailVerified();
 
         if(emailflag){
             Toast.makeText(organizerLogin.this, "Login successful", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(organizerLogin.this,organizerPortal.class));
             finish();
+            return true;
         }
         else
         {
             Toast.makeText(this,"Verify your Email",Toast.LENGTH_SHORT).show();
             firebaseAuth.signOut();
+            return false;
         }
     }
 

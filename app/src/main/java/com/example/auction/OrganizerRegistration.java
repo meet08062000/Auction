@@ -12,12 +12,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class OrganizerRegistration extends AppCompatActivity {
 
@@ -32,12 +32,17 @@ public class OrganizerRegistration extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private String fname,lname,email;
 
+    private FirebaseFirestore db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_organizer_registration);
 
         Log.d(TAG, "onCreate: ");
+
+        //Firestore
+        db = FirebaseFirestore.getInstance();
 
         orgFname=(EditText)findViewById(R.id.firstName);
         orgLname=(EditText)findViewById(R.id.lastName);
@@ -49,6 +54,7 @@ public class OrganizerRegistration extends AppCompatActivity {
         ogSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG, "onClick: CLiccked");
                 fname=orgFname.getText().toString();
                 lname=orgLname.getText().toString();
                 email=organizerUid.getText().toString();
@@ -87,18 +93,21 @@ public class OrganizerRegistration extends AppCompatActivity {
         }
         if(pw.equals(retype))
         {
-
+            Log.d(TAG, "storeOrg: IN lAst");
             firebaseAuth= FirebaseAuth.getInstance();
-            firebaseAuth.createUserWithEmailAndPassword(uid,pw).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            firebaseAuth.createUserWithEmailAndPassword(uid,pw).addOnCompleteListener(this,new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
+                    Log.d(TAG, "onComplete: AA = "+task.getResult().toString());
                     if(task.isSuccessful())
                     {
+                        Log.d(TAG, "onComplete: Success in Verification");
                         sendEmailVerification();
                     }
                     else
                     {
                         Toast.makeText(OrganizerRegistration.this, "Registration failed, please try again.", Toast.LENGTH_SHORT).show();
+                        Log.e(TAG, "onComplete: ", task.getException());
                         finish();
                     }
                 }
@@ -108,13 +117,14 @@ public class OrganizerRegistration extends AppCompatActivity {
 
         else
         {
-            Toast.makeText(getApplicationContext(),"Your retyped password does not match your original password",Toast.LENGTH_LONG).show();
+            Toast.makeText(OrganizerRegistration.this,"Your retyped password does not match your original password",Toast.LENGTH_LONG).show();
         }
 
     }
 
     private void sendEmailVerification()
     {
+        Log.d(TAG, "sendEmailVerification: In HEre");
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         if(firebaseUser!=null)
         {
@@ -126,7 +136,6 @@ public class OrganizerRegistration extends AppCompatActivity {
                         Log.d(TAG, "onComplete: Called ");
                         sendUserData();
                         Toast.makeText(OrganizerRegistration.this,"Successfully Registered, please verify your email",Toast.LENGTH_SHORT).show();
-                        firebaseAuth.signOut();
                         finish();
                         startActivity(new Intent(OrganizerRegistration.this,organizerLogin.class));
                     }
@@ -142,9 +151,21 @@ public class OrganizerRegistration extends AppCompatActivity {
     private void sendUserData()
     {
         Log.d(TAG, "called");
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = firebaseDatabase.getReference("Organizers");
         Organizer org = new Organizer(fname,lname,email);
-        myRef.child(fname+lname).setValue(org);
+
+        db.collection("Organizers").document(FirebaseAuth.getInstance().getCurrentUser().getUid()).set(org).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Log.d(TAG, "sendUserData: In IT");
+                Toast.makeText(OrganizerRegistration.this, "Success!!!", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "onFailure: E = "+e.toString());
+                Log.e(TAG, "onFailure: ",e );
+            }
+        });
     }
+
 }

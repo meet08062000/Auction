@@ -12,12 +12,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class UserRegistration extends AppCompatActivity {
 
@@ -30,11 +30,14 @@ public class UserRegistration extends AppCompatActivity {
     private Button usSubmit;
     private FirebaseAuth firebaseAuth;
     private String fname,lname,email;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_registration);
+
+        db = FirebaseFirestore.getInstance();
 
         usFname=(EditText)findViewById(R.id.usrFirstName);
         usLname=(EditText)findViewById(R.id.usrLastName);
@@ -122,7 +125,6 @@ public class UserRegistration extends AppCompatActivity {
                     {
                         sendUserData();
                         Toast.makeText(UserRegistration.this,"Successfully Registered, please verify your email",Toast.LENGTH_SHORT).show();
-                        firebaseAuth.signOut();
                         finish();
                         startActivity(new Intent(UserRegistration.this,userLogin.class));
                     }
@@ -138,10 +140,21 @@ public class UserRegistration extends AppCompatActivity {
     private void sendUserData()
     {
         Log.d(TAG, "called");
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = firebaseDatabase.getReference("Organizers");
-        Organizer org = new Organizer(fname,lname,email);
-        myRef.child(fname+lname).setValue(org);
+        User user = new User(fname,lname,email);
+
+        db.collection("Users").document(FirebaseAuth.getInstance().getCurrentUser().getUid()).set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Log.d(TAG, "sendUserData: In IT");
+                Toast.makeText(UserRegistration.this, "Success!!!", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "onFailure: E = "+e.toString());
+                Log.e(TAG, "onFailure: ",e );
+            }
+        });
     }
 
 }
