@@ -2,6 +2,7 @@ package com.example.auction;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,6 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class UserRegistration extends AppCompatActivity {
 
+    private static final String TAG = "UserRegistration";
     private EditText usFname;
     private EditText usLname;
     private EditText userUid;
@@ -27,6 +29,7 @@ public class UserRegistration extends AppCompatActivity {
     private EditText retypeUs;
     private Button usSubmit;
     private FirebaseAuth firebaseAuth;
+    private String fname,lname,email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +46,9 @@ public class UserRegistration extends AppCompatActivity {
         usSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                fname=usFname.getText().toString();
+                lname=usLname.getText().toString();
+                email=userUid.getText().toString();
                 storeUser(usFname.getText().toString(),usLname.getText().toString(),userUid.getText().toString(),usPswd.getText().toString(),retypeUs.getText().toString());
             }
         });
@@ -87,11 +93,6 @@ public class UserRegistration extends AppCompatActivity {
                     if(task.isSuccessful())
                     {
                         sendEmailVerification();
-                        /*sendUserData();
-                        Toast.makeText(UserRegistration.this,"Successfully Registered, please verify your email",Toast.LENGTH_SHORT).show();
-                        firebaseAuth.signOut();
-                        finish();
-                        startActivity(new Intent(UserRegistration.this,userLogin.class));*/
                     }
                     else
                     {
@@ -136,10 +137,11 @@ public class UserRegistration extends AppCompatActivity {
 
     private void sendUserData()
     {
+        Log.d(TAG, "called");
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = firebaseDatabase.getReference(firebaseAuth.getUid());
-        User user = new User(usFname.getText().toString(),usLname.getText().toString(),userUid.getText().toString());
-        myRef.setValue(user);
+        DatabaseReference myRef = firebaseDatabase.getReference("Organizers");
+        Organizer org = new Organizer(fname,lname,email);
+        myRef.child(fname+lname).setValue(org);
     }
 
 }

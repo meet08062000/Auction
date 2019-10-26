@@ -143,8 +143,8 @@ public class OrganizerRegistration extends AppCompatActivity {
     {
         Log.d(TAG, "called");
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = firebaseDatabase.getReference("Users");
-        Organizer org = new Organizer("Meet","Shah","meet8june@gmail.com");
-        myRef.child("sklsdjfklasjdf").setValue(org);
+        DatabaseReference myRef = firebaseDatabase.getReference("Organizers");
+        Organizer org = new Organizer(fname,lname,email);
+        myRef.child(fname+lname).setValue(org);
     }
 }
