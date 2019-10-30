@@ -17,7 +17,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
 
 public class OrganizerRegistration extends AppCompatActivity {
 
@@ -31,18 +34,16 @@ public class OrganizerRegistration extends AppCompatActivity {
     private Button ogSubmit;
     private FirebaseAuth firebaseAuth;
     private String fname,lname,email;
-
     private FirebaseFirestore db;
+    private CollectionReference colref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_organizer_registration);
-
-        Log.d(TAG, "onCreate: ");
-
-        //Firestore
+        
         db = FirebaseFirestore.getInstance();
+        colref = db.collection("Organizers");
 
         orgFname=(EditText)findViewById(R.id.firstName);
         orgLname=(EditText)findViewById(R.id.lastName);
@@ -55,17 +56,17 @@ public class OrganizerRegistration extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: CLiccked");
-                fname=orgFname.getText().toString();
-                lname=orgLname.getText().toString();
-                email=organizerUid.getText().toString();
-                storeOrg(orgFname.getText().toString(),orgLname.getText().toString(),organizerUid.getText().toString(),orgPw.getText().toString(),orgRetype.getText().toString());
+                storeOrg(orgPw.getText().toString(),orgRetype.getText().toString());
             }
         });
 
     }
 
-    private void storeOrg(String fname,String lname,String uid,String pw,String retype)
+    private void storeOrg(String pw,String retype)
     {
+        fname=orgFname.getText().toString();
+        lname=orgLname.getText().toString();
+        email=organizerUid.getText().toString();
         if(fname.isEmpty())
         {
             Toast.makeText(getApplicationContext(),"First name cannot be empty.",Toast.LENGTH_LONG).show();
@@ -76,7 +77,7 @@ public class OrganizerRegistration extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),"Last name cannot be empty.",Toast.LENGTH_LONG).show();
             return;
         }
-        else if(uid.isEmpty())
+        else if(email.isEmpty())
         {
             Toast.makeText(getApplicationContext(),"UserName cannot be empty.",Toast.LENGTH_LONG).show();
             return;
@@ -93,9 +94,9 @@ public class OrganizerRegistration extends AppCompatActivity {
         }
         if(pw.equals(retype))
         {
+            firebaseAuth=FirebaseAuth.getInstance();
             Log.d(TAG, "storeOrg: IN lAst");
-            firebaseAuth= FirebaseAuth.getInstance();
-            firebaseAuth.createUserWithEmailAndPassword(uid,pw).addOnCompleteListener(this,new OnCompleteListener<AuthResult>() {
+            firebaseAuth.createUserWithEmailAndPassword(email,pw).addOnCompleteListener(this,new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     Log.d(TAG, "onComplete: AA = "+task.getResult().toString());
@@ -150,22 +151,20 @@ public class OrganizerRegistration extends AppCompatActivity {
 
     private void sendUserData()
     {
-        Log.d(TAG, "called");
-        Organizer org = new Organizer(fname,lname,email);
-
-        db.collection("Organizers").document(FirebaseAuth.getInstance().getCurrentUser().getUid()).set(org).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                Log.d(TAG, "sendUserData: In IT");
-                Toast.makeText(OrganizerRegistration.this, "Success!!!", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d(TAG, "onFailure: E = "+e.toString());
-                Log.e(TAG, "onFailure: ",e );
-            }
-        });
+        Organizer org = new Organizer(fname, lname, email, new ArrayList<String>());
+        Log.d(TAG, "sendUserData: iske andar aa raha hai"+org.fname+org.lname+org.email);
+        db.collection("Organizers").document(firebaseAuth.getCurrentUser().getUid()).set(org)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Log.d(TAG, "onComplete: majaa aa gaya");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "onFailure: so near yet so far");
+                    }
+                });
     }
 
 }

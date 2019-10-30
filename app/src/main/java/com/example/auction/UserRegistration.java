@@ -142,7 +142,8 @@ public class UserRegistration extends AppCompatActivity {
         Log.d(TAG, "called");
         User user = new User(fname,lname,email);
 
-        db.collection("Users").document(FirebaseAuth.getInstance().getCurrentUser().getUid()).set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+        db.collection("Users").document(FirebaseAuth.getInstance().getCurrentUser().getUid()).set(user)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 Log.d(TAG, "sendUserData: In IT");

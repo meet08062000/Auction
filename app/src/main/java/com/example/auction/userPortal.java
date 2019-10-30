@@ -39,7 +39,7 @@ public class userPortal extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(position==0)
                 {
-
+                    startActivity(new Intent(userPortal.this, AuctionList.class));
                 }
                 else if(position==1)
                 {

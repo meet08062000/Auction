@@ -28,8 +28,6 @@ public class organizerPortal extends AppCompatActivity {
 
         orgList = (ListView)findViewById(R.id.organizerList);
 
-        names.add("Add a user");
-        names.add("Remove a user");
         names.add("Auctions");
         names.add("Add an auction");
         names.add("Remove an auction");
@@ -42,22 +40,14 @@ public class organizerPortal extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(position==0)
                 {
-
+                    //startActivity();
                 }
                 else if(position==1)
-                {
-
-                }
-                else if(position==2)
-                {
-
-                }
-                else if(position==3)
                 {
                     Intent intent = new Intent(organizerPortal.this,AddAuction.class);
                     startActivity(intent);
                 }
-                else if(position==4)
+                else if(position==2)
                 {
 
                 }

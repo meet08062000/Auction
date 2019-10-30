@@ -5,7 +5,7 @@ import java.util.List;
 
 class User {
     public String fname,lname,email;
-    public List<ObjectToBeSold> wishlist = new ArrayList<>();
+    public List<String> wishlist = new ArrayList<>();
 
     public User(String fname, String lname, String email) {
         this.fname = fname;
