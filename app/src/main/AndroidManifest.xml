@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.auction">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name="androidx.multidex.MultiDexApplication"
@@ -14,8 +14,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-
-        <activity android:name=".AddObject"/>
+        <activity android:name=".UserAuctionPage"></activity>
+        <activity android:name=".AuctionList" />
+        <activity
+            android:name=".AddObject"
+            android:parentActivityName=".AddAuction" />
         <activity android:name=".AddAuction" />
         <activity android:name=".UserRegistration" />
         <activity android:name=".OrganizerRegistration" />
@@ -23,7 +26,6 @@
         <activity android:name=".userPortal" />
         <activity android:name=".organizerLogin" />
         <activity android:name=".userLogin" />
-
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

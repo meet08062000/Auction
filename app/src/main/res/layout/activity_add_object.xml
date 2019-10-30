@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
 <RelativeLayout
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     tools:context=".AddObject">
 
     <EditText
@@ -13,22 +11,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="91dp"
+        android:layout_marginTop="46dp"
         android:ems="10"
         android:hint="Object Name"
-        android:inputType="textPersonName" />
+        android:inputType="textPersonName"
+        android:layout_centerHorizontal="true"/>
 
     <EditText
         android:id="@+id/object_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="190dp"
+        android:layout_marginTop="126dp"
         android:ems="10"
         android:gravity="start|top"
         android:hint="Object Description"
+        android:layout_centerHorizontal="true"
         android:inputType="textMultiLine" />
 
     <EditText
@@ -36,42 +34,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="304dp"
+        android:layout_marginTop="207dp"
         android:ems="10"
         android:hint="Starting Bid"
-        android:inputType="number" />
-
-    <EditText
-        android:id="@+id/start_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="434dp"
-        android:ems="10"
-        android:hint="Start Date"
-        android:inputType="date" />
-
-    <EditText
-        android:id="@+id/end_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="558dp"
-        android:ems="10"
-        android:hint="End Date"
-        android:inputType="date" />
+        android:inputType="number"
+        android:layout_centerHorizontal="true"/>
 
     <Button
         android:id="@+id/add_object"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="646dp"
-        android:text="Add" />
+        android:layout_marginTop="279dp"
+        android:text="Add"
+        android:layout_centerHorizontal="true"/>
+
+    <Button
+        android:id="@+id/finish"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="359dp"
+        android:text="Finish adding objects"
+        android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>
-</ScrollView>

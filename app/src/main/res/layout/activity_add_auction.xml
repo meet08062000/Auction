@@ -34,16 +34,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="380dp"
-        android:text="Proceed to add objects" />
-
-    <Button
-        android:id="@+id/AddGoBack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="486dp"
-        android:text="Add Auction and Go back" />
+        android:text="Add auction and proceed to add objects" />
 
     <EditText
         android:id="@+id/auction_description"
