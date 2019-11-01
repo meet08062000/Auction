@@ -27,7 +27,6 @@ class Auction
         this.desc = desc;
         this.type = type;
         this.obj = obj;
-        on=false;
     }
 
     public String getName() {

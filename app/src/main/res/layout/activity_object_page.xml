@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ObjectPage">
+
+    <TextView
+        android:id="@+id/object_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="73dp"
+        android:text="Object Name"
+        android:textSize="32dp" />
+
+    <TextView
+        android:id="@+id/object_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="177dp"
+        android:text="Object Description"
+        android:textSize="32dp" />
+
+    <TextView
+        android:id="@+id/object_current_bid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="386dp"
+        android:text="Current Bid"
+        android:textSize="32dp"
+        android:layout_centerHorizontal="true"/>
+
+    <Button
+        android:id="@+id/user_input_bid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="490dp"
+        android:text="Bid"
+        android:layout_centerHorizontal="true"/>
+</RelativeLayout>

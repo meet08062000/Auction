@@ -2,6 +2,7 @@ package com.example.auction;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,10 +13,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class organizerLogin extends AppCompatActivity {
 
@@ -26,6 +30,8 @@ public class organizerLogin extends AppCompatActivity {
     private TextView text;
     private TextView ogSignUp;
     private FirebaseAuth firebaseAuth;
+    private FirebaseFirestore db;
+    private static final String TAG = "organizerLogin";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,27 +47,44 @@ public class organizerLogin extends AppCompatActivity {
         text.setText("No of attempts remaining: "+count);
 
         firebaseAuth=FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
-        FirebaseUser organizer = firebaseAuth.getCurrentUser();
+        final FirebaseUser organizer = firebaseAuth.getCurrentUser();
 
         if(organizer!=null)
         {
-            boolean emailverify = checkEmailVerification();
-            if(emailverify)
-            {
-                finish();
-                startActivity(new Intent(organizerLogin.this,organizerPortal.class));
-            }
-            else
-            {
-                firebaseAuth.signOut();
-            }
+            db.collection("Organizers").document(organizer.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    if(documentSnapshot.exists())
+                    {
+                        boolean emailverify = checkEmailVerification();
+                        if(emailverify)
+                        {
+                            finish();
+                            startActivity(new Intent(organizerLogin.this,organizerPortal.class));
+                        }
+                        else
+                        {
+                            firebaseAuth.signOut();
+                        }
+                    }
+                    else
+                    {
+                        Toast.makeText(organizerLogin.this, "You are signed in as a user. You cannot login as organizer.", Toast.LENGTH_SHORT).show();
+                        finish();
+                        startActivity(new Intent(organizerLogin.this, MainActivity.class));
+                    }
+                }
+            });
+
         }
 
         log.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 validate(orgName.getText().toString(),orgpswd.getText().toString());
+                Log.d(TAG, "onClick: clicked");
             }
         });
 
@@ -75,13 +98,28 @@ public class organizerLogin extends AppCompatActivity {
     }
 
     private void validate(String uname, String pwd) {
-
+        Log.d(TAG, "validate: in validate");
         firebaseAuth.signInWithEmailAndPassword(uname, pwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful())
                 {
-                    checkEmailVerification();
+                    Log.d(TAG, "onComplete: signed in");
+                    db.collection("Organizers").document(firebaseAuth.getCurrentUser().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                            if(documentSnapshot.exists())
+                            {
+                                checkEmailVerification();
+                            }
+                            else
+                            {
+                                firebaseAuth.signOut();
+                                Toast.makeText(organizerLogin.this, "You are a user. You cannot login as organizer.", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
 
                 }
                 else {

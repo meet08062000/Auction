@@ -1,8 +1,5 @@
 package com.example.auction;
 
-import java.util.ArrayList;
-import java.util.List;
-
 class ObjectToBeSold
 {
     public String auction;
@@ -10,15 +7,18 @@ class ObjectToBeSold
     public String desc;
     public int startBid;
     public int currBid;
-    public List<String> userList = new ArrayList<>();
+    public String user;
 
-    public ObjectToBeSold(String suction, String name, String desc, int startBid, List<String> userList) {
+    public ObjectToBeSold() {
+    }
+
+    public ObjectToBeSold(String suction, String name, String desc, int startBid) {
         this.auction = auction;
         this.name = name;
         this.desc = desc;
         this.startBid = startBid;
         this.currBid = startBid;
-        this.userList = userList;
+        user = "";
     }
 
     public String getName() {
@@ -45,11 +45,4 @@ class ObjectToBeSold
         this.currBid = currBid;
     }
 
-    public List<String> getUserList() {
-        return userList;
-    }
-
-    public void setUserList(List<String> userList) {
-        this.userList = userList;
-    }
 }

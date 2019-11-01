@@ -12,10 +12,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class userLogin extends AppCompatActivity {
 
@@ -26,6 +29,7 @@ public class userLogin extends AppCompatActivity {
     private int ctr=5;
     private TextView usSignUp;
     private FirebaseAuth firebaseAuth;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,21 +45,37 @@ public class userLogin extends AppCompatActivity {
         noAttempts.setText("No of attempts remaining: "+ctr);
 
         firebaseAuth=FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         FirebaseUser user = firebaseAuth.getCurrentUser();
 
         if(user!=null)
         {
-            boolean emailverify = checkEmailVerification();
-            if(emailverify)
-            {
-                finish();
-                startActivity(new Intent(userLogin.this,userPortal.class));
-            }
-            else
-            {
-                firebaseAuth.signOut();
-            }
+            db.collection("Users").document(user.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    if(documentSnapshot.exists())
+                    {
+                        boolean emailverify = checkEmailVerification();
+                        if(emailverify)
+                        {
+                            finish();
+                            startActivity(new Intent(userLogin.this,userPortal.class));
+                        }
+                        else
+                        {
+                            firebaseAuth.signOut();
+                        }
+                    }
+                    else
+                    {
+                        Toast.makeText(userLogin.this, "You are signed in as a organizer. You cannot login as user.", Toast.LENGTH_SHORT).show();
+                        finish();
+                        startActivity(new Intent(userLogin.this, MainActivity.class));
+                    }
+                }
+            });
+
         }
 
 
@@ -83,7 +103,21 @@ public class userLogin extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful())
                 {
-                    checkEmailVerification();
+                    db.collection("Users").document(firebaseAuth.getCurrentUser().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            if(documentSnapshot.exists())
+                            {
+                                checkEmailVerification();
+                            }
+                            else
+                            {
+                                firebaseAuth.signOut();
+                                Toast.makeText(userLogin.this, "You are an organizer. You cannot login as user.", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
                 }
                 else {
                     Toast.makeText(userLogin.this, "Login Failed", Toast.LENGTH_SHORT).show();

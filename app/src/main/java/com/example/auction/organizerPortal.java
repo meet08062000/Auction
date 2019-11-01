@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
@@ -20,6 +21,8 @@ public class organizerPortal extends AppCompatActivity {
 
     private ListView orgList;
     private ArrayList<String> names = new ArrayList<>();
+    private FirebaseFirestore db;
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +30,8 @@ public class organizerPortal extends AppCompatActivity {
         setContentView(R.layout.activity_organizer_portal);
 
         orgList = (ListView)findViewById(R.id.organizerList);
+        firebaseAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         names.add("Auctions");
         names.add("Add an auction");
@@ -40,7 +45,7 @@ public class organizerPortal extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(position==0)
                 {
-                    //startActivity();
+                    startActivity(new Intent(organizerPortal.this, OrganizerAuctionList.class));
                 }
                 else if(position==1)
                 {

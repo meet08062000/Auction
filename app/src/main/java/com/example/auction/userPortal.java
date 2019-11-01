@@ -29,7 +29,7 @@ public class userPortal extends AppCompatActivity {
         usrList = (ListView)findViewById(R.id.userList);
 
         names.add("All auctions");
-        names.add("Your auctions");
+        names.add("Objects in which you have highest bid currently");
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, names);
         usrList.setAdapter(adapter);

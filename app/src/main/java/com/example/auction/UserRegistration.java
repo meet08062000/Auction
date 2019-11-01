@@ -125,8 +125,7 @@ public class UserRegistration extends AppCompatActivity {
                     {
                         sendUserData();
                         Toast.makeText(UserRegistration.this,"Successfully Registered, please verify your email",Toast.LENGTH_SHORT).show();
-                        finish();
-                        startActivity(new Intent(UserRegistration.this,userLogin.class));
+
                     }
                     else
                     {
@@ -148,6 +147,8 @@ public class UserRegistration extends AppCompatActivity {
             public void onComplete(@NonNull Task<Void> task) {
                 Log.d(TAG, "sendUserData: In IT");
                 Toast.makeText(UserRegistration.this, "Success!!!", Toast.LENGTH_SHORT).show();
+                finish();
+                startActivity(new Intent(UserRegistration.this,userLogin.class));
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

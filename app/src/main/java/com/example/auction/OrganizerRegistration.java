@@ -129,16 +129,15 @@ public class OrganizerRegistration extends AppCompatActivity {
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         if(firebaseUser!=null)
         {
+            Log.d(TAG, "sendEmailVerification: UID = "+firebaseUser.getUid());
             firebaseUser.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if(task.isSuccessful())
                     {
-                        Log.d(TAG, "onComplete: Called ");
+                        Log.d(TAG, "sendEmailVerification onComplete: Called ");
                         sendUserData();
                         Toast.makeText(OrganizerRegistration.this,"Successfully Registered, please verify your email",Toast.LENGTH_SHORT).show();
-                        finish();
-                        startActivity(new Intent(OrganizerRegistration.this,organizerLogin.class));
                     }
                     else
                     {
@@ -146,18 +145,31 @@ public class OrganizerRegistration extends AppCompatActivity {
                     }
                 }
             });
+        } else{
+            Log.d(TAG, "sendEmailVerification: NULL USER");
         }
     }
 
     private void sendUserData()
     {
+        Log.d(TAG, "sendUserData: FName = "+fname);
+        Log.d(TAG, "sendUserData: LName = "+lname);
+        Log.d(TAG, "sendUserData: Email = "+email);
+        Log.d(TAG, "sendUserData: UID = "+firebaseAuth.getCurrentUser().getUid());
+
         Organizer org = new Organizer(fname, lname, email, new ArrayList<String>());
+
         Log.d(TAG, "sendUserData: iske andar aa raha hai"+org.fname+org.lname+org.email);
+
         db.collection("Organizers").document(firebaseAuth.getCurrentUser().getUid()).set(org)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         Log.d(TAG, "onComplete: majaa aa gaya");
+                        Toast.makeText(OrganizerRegistration.this, "It's Done", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(OrganizerRegistration.this,organizerLogin.class);
+                        finish();
+                        startActivity(intent);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override

@@ -18,8 +18,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
-
 public class AddObject extends AppCompatActivity {
 
     private EditText name;
@@ -79,7 +77,7 @@ public class AddObject extends AppCompatActivity {
                     return;
                 }
 
-                obj = new ObjectToBeSold(auction, objName, objDesc,start,new ArrayList<String>());
+                obj = new ObjectToBeSold(auction, objName, objDesc,start);
                 Log.d(TAG, "onCreate: "+auction);
                 docref2 = db.collection("Objects").document(objName);
                 docref2.set(obj).addOnSuccessListener(new OnSuccessListener<Void>() {

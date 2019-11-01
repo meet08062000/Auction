@@ -3,6 +3,8 @@ package com.example.auction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -25,6 +27,10 @@ public class UserAuctionPage extends AppCompatActivity {
     private FirebaseFirestore db;
     private ArrayList<String> objlist = new ArrayList<>();
     private ListView list;
+    private String auc;
+
+    public static final String EXTRA_OBJ_AUCTION = "com.example.auction.EXTRA_OBJ_AUCTION";
+    public static final String EXTRA_OBJ = "com.example.auction.EXTRA_OBJ";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +38,7 @@ public class UserAuctionPage extends AppCompatActivity {
         setContentView(R.layout.activity_user_auction_page);
 
         Intent intent = getIntent();
-        String auc = intent.getStringExtra(AuctionList.EXTRA_AUCTION);
+        auc = intent.getStringExtra(AuctionList.EXTRA_AUCTION);
 
         db = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
@@ -52,6 +58,17 @@ public class UserAuctionPage extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.d(TAG, "onFailure: fail fail fail!!!");
+            }
+        });
+
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String clickedObject = list.getItemAtPosition(position).toString();
+                Intent intent = new Intent(UserAuctionPage.this, ObjectPage.class);
+                intent.putExtra(EXTRA_OBJ_AUCTION, auc);
+                intent.putExtra(EXTRA_OBJ, clickedObject);
+                startActivity(intent);
             }
         });
 
