@@ -25,6 +25,12 @@ public class organizerPortal extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
 
     @Override
+    public void onBackPressed() {
+        finish();
+        startActivity(new Intent(organizerPortal.this, MainActivity.class));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_organizer_portal);
@@ -54,7 +60,7 @@ public class organizerPortal extends AppCompatActivity {
                 }
                 else if(position==2)
                 {
-
+                    startActivity(new Intent(organizerPortal.this, ChooseAuctionToBeDeleted.class));
                 }
 
             }
