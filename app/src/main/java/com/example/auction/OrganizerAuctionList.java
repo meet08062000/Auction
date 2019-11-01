@@ -1,5 +1,6 @@
 package com.example.auction;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -27,6 +28,8 @@ public class OrganizerAuctionList extends AppCompatActivity {
     private DocumentReference docref;
 
     private static final String TAG = "OrganizerAuctionList";
+
+    public static final String EXTRA_ORGANIZER_AUCTION = "com.example.auction.EXTRA_ORGANIZER_AUCTION";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +67,11 @@ public class OrganizerAuctionList extends AppCompatActivity {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                
+                String a = list.getItemAtPosition(position).toString();
+
+                Intent intent = new Intent(OrganizerAuctionList.this, OrganizerObjectList.class);
+                intent.putExtra(EXTRA_ORGANIZER_AUCTION, a);
+                startActivity(intent);
             }
         });
     }
