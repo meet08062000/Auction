@@ -22,6 +22,12 @@ public class userPortal extends AppCompatActivity {
     private ArrayList<String> names = new ArrayList<>();
 
     @Override
+    public void onBackPressed() {
+        finish();
+        startActivity(new Intent(userPortal.this, MainActivity.class));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_portal);
