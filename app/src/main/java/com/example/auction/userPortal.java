@@ -49,7 +49,8 @@ public class userPortal extends AppCompatActivity {
                 }
                 else if(position==1)
                 {
-
+                    Intent intent = new Intent(userPortal.this, LeadList.class);
+                    startActivity(intent);
                 }
             }
         });

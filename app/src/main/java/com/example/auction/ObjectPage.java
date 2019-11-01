@@ -1,11 +1,16 @@
 package com.example.auction;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -24,6 +29,8 @@ public class ObjectPage extends AppCompatActivity {
     private int userBid;
     private String obj,auc;
     private ObjectToBeSold currobj;
+
+    private static final String TAG = "ObjectPage";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +52,7 @@ public class ObjectPage extends AppCompatActivity {
         db.collection("Objects").document(obj).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                currobj = documentSnapshot.toObject(ObjectToBeSold.class);
+                setcurrObj(documentSnapshot);
 
                 name.setText("Object name: "+currobj.name);
                 desc.setText(currobj.desc);
@@ -57,8 +64,67 @@ public class ObjectPage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                LayoutInflater layoutInflater = LayoutInflater.from(ObjectPage.this);
+                View promptView = layoutInflater.inflate(R.layout.user_bid, null);
+
+                AlertDialog.Builder alert = new AlertDialog.Builder(ObjectPage.this);
+                alert.setView(promptView);
+                final EditText newBid = (EditText)promptView.findViewById(R.id.new_bid);
+
+                alert.setTitle("Enter your bid");
+
+                alert.setCancelable(false)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                int n = Integer.parseInt(newBid.getText().toString());
+
+                                if(n>currobj.currBid)
+                                {
+                                    currobj.currBid = n;
+                                    currobj.user = firebaseAuth.getCurrentUser().getUid();
+
+                                    db.collection("Objects").document(currobj.name).set(currobj).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Log.d(TAG, "onSuccess: majaa aavi gayi baapu!!");
+                                        }
+                                    });
+
+                                    db.collection("Users").document(firebaseAuth.getCurrentUser().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                            User us = documentSnapshot.toObject(User.class);
+
+                                            Log.d(TAG, "onSuccess: here");
+
+                                            us.wishlist.add(obj);
+                                            db.collection("Users").document(firebaseAuth.getCurrentUser().getUid()).set(us).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Log.d(TAG, "onSuccess: user updated");
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+
+                            }
+                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                alert.create();
+                alert.show();
 
             }
         });
+    }
+
+    void setcurrObj(DocumentSnapshot documentSnapshot)
+    {
+        currobj = documentSnapshot.toObject(ObjectToBeSold.class);
     }
 }
