@@ -64,7 +64,7 @@ public class ChooseAuctionToBeDeleted extends AppCompatActivity {
                         for(String s: a.obj)
                         {
                             s1 = s;
-                            Log.d(TAG, "onSuccess:  s = "+s);
+                            Log.d(TAG, "onSuccess:  s = "+s1);
                             db.collection("Objects").document(s).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
