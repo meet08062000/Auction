@@ -1,6 +1,5 @@
 package com.example.auction;
 
-import java.util.ArrayList;
 import java.util.List;
 
 class Auction
@@ -9,16 +8,9 @@ class Auction
     public String organizer;
     public String desc;
     public String type;
-    public boolean on;
     public List<String> obj;
 
     public Auction() {
-        name="";
-        organizer="";
-        desc="";
-        type="";
-        obj=new ArrayList<>();
-        on=false;
     }
 
     public Auction(String name, String organizer, String desc, String type, List<String> obj) {

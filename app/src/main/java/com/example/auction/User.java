@@ -6,6 +6,7 @@ import java.util.List;
 class User {
     public String fname,lname,email;
     public List<String> wishlist = new ArrayList<>();
+    public List<String> won = new ArrayList<>();
 
     public User() {
     }

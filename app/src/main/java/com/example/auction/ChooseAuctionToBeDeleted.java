@@ -14,6 +14,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
@@ -24,6 +25,7 @@ public class ChooseAuctionToBeDeleted extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore db;
     private Organizer org;
+    private String s1;
 
     private static final String TAG = "ChooseAuctionToBeDelete";
 
@@ -61,10 +63,36 @@ public class ChooseAuctionToBeDeleted extends AppCompatActivity {
                         
                         for(String s: a.obj)
                         {
+                            s1 = s;
+                            Log.d(TAG, "onSuccess:  s = "+s);
                             db.collection("Objects").document(s).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     Log.d(TAG, "onSuccess: object deleted");
+                                }
+                            });
+
+                            db.collection("Users").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                @Override
+                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                    for(DocumentSnapshot documentSnapshot : queryDocumentSnapshots)
+                                    {
+                                        User u = documentSnapshot.toObject(User.class);
+
+                                        if(u.wishlist.contains(s1))
+                                        {
+                                            u.wishlist.remove(s1);
+                                            u.won.add(s1);
+
+                                            Log.d(TAG, "onSuccess: s1 = "+s1);
+                                            db.collection("Users").document(documentSnapshot.getId()).set(u).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Log.d(TAG, "onSuccess: the whole app is complete");
+                                                }
+                                            });
+                                        }
+                                    }
                                 }
                             });
                         }

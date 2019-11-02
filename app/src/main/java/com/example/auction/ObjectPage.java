@@ -19,12 +19,14 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class ObjectPage extends AppCompatActivity {
 
     private TextView name;
     private TextView desc;
     private TextView curr;
+    private TextView leader;
     private Button bid;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore db;
@@ -47,6 +49,7 @@ public class ObjectPage extends AppCompatActivity {
         desc = (TextView)findViewById(R.id.object_description);
         curr = (TextView)findViewById(R.id.object_current_bid);
         bid = (Button) findViewById(R.id.user_input_bid);
+        leader = (TextView)findViewById(R.id.user);
 
         db = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
@@ -59,6 +62,19 @@ public class ObjectPage extends AppCompatActivity {
                 name.setText("Object name: "+currobj.name);
                 desc.setText(currobj.desc);
                 curr.setText("Current bid: "+currobj.currBid);
+
+                if(currobj.user!="")
+                {
+                    db.collection("Users").document(currobj.user).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            User u = documentSnapshot.toObject(User.class);
+                            String uname = u.fname+" "+u.lname;
+
+                            leader.setText("Current highest bidder: "+uname);
+                        }
+                    });
+                }
             }
         });
 
@@ -86,34 +102,77 @@ public class ObjectPage extends AppCompatActivity {
                                     currobj.currBid = n;
                                     currobj.user = firebaseAuth.getCurrentUser().getUid();
 
+                                    db.collection("Users").document(currobj.user).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                            User u = documentSnapshot.toObject(User.class);
+                                            String uname = u.fname+" "+u.lname;
+
+                                            leader.setText("Current highest bidder: "+uname);
+                                        }
+                                    });
+
+                                    curr.setText("Current bid : "+ currobj.currBid);
                                     db.collection("Objects").document(currobj.name).set(currobj).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
                                             Log.d(TAG, "onSuccess: majaa aavi gayi baapu!!");
+
                                         }
                                     });
 
-                                    db.collection("Users").document(firebaseAuth.getCurrentUser().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                    db.collection("Users").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                         @Override
-                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                            User us = documentSnapshot.toObject(User.class);
+                                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
 
-                                            Log.d(TAG, "onSuccess: here");
+                                            for(DocumentSnapshot documentSnapshot: queryDocumentSnapshots)
+                                            {
+                                                User u = documentSnapshot.toObject(User.class);
 
-                                            us.wishlist.add(obj);
-                                            db.collection("Users").document(firebaseAuth.getCurrentUser().getUid()).set(us).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                if(u.wishlist.contains(currobj.name))
+                                                {
+                                                    u.wishlist.remove(currobj.name);
+                                                    db.collection("Users").document(documentSnapshot.getId()).set(u).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void aVoid) {
+                                                            Log.d(TAG, "onSuccess: update ho gaya");
+                                                        }
+                                                    }).addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            Log.d(TAG, "onFailure: some error");
+                                                        }
+                                                    });
+                                                }
+
+
+                                            }
+
+                                            db.collection("Users").document(firebaseAuth.getCurrentUser().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                                 @Override
-                                                public void onSuccess(Void aVoid) {
-                                                    Log.d(TAG, "onSuccess: user updated");
+                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                    User us = documentSnapshot.toObject(User.class);
+
+                                                    Log.d(TAG, "onSuccess: here");
+
+                                                    us.wishlist.add(obj);
+                                                    db.collection("Users").document(firebaseAuth.getCurrentUser().getUid()).set(us).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void aVoid) {
+                                                            Log.d(TAG, "onSuccess: user updated");
+                                                        }
+                                                    });
+                                                }
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.d(TAG, "onFailure: failed!!!!!!");
                                                 }
                                             });
                                         }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Log.d(TAG, "onFailure: failed!!!!!!");
-                                        }
                                     });
+
+
                                 }
 
                             }

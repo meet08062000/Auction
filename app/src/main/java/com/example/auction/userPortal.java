@@ -36,6 +36,7 @@ public class userPortal extends AppCompatActivity {
 
         names.add("All auctions");
         names.add("Objects in which you have highest bid currently");
+        names.add("Objects that you have won");
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, names);
         usrList.setAdapter(adapter);
@@ -51,6 +52,10 @@ public class userPortal extends AppCompatActivity {
                 {
                     Intent intent = new Intent(userPortal.this, LeadList.class);
                     startActivity(intent);
+                }
+                else
+                {
+                    startActivity(new Intent(userPortal.this, WonList.class));
                 }
             }
         });

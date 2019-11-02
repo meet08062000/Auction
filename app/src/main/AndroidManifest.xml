@@ -14,7 +14,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".LeadList"></activity>
+        <activity android:name=".WonList"></activity>
+        <activity android:name=".LeadList" />
         <activity android:name=".ChooseAuctionToBeDeleted" />
         <activity android:name=".OrganizerObjectList" />
         <activity android:name=".OrganizerAuctionList" />
