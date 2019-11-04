@@ -25,7 +25,8 @@ public class ChooseAuctionToBeDeleted extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore db;
     private Organizer org;
-    private String s1;
+    private User u,requser;
+    //private String s1;
 
     private static final String TAG = "ChooseAuctionToBeDelete";
 
@@ -55,20 +56,22 @@ public class ChooseAuctionToBeDeleted extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 final String clickedAuction = list.getItemAtPosition(position).toString();
-                
+
                 db.collection("Auctions").document(clickedAuction).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         Auction a = documentSnapshot.toObject(Auction.class);
-                        
-                        for(String s: a.obj)
+
+                        for(final String s: a.obj)
                         {
-                            s1 = s;
-                            Log.d(TAG, "onSuccess:  s = "+s1);
+                            Log.d(TAG, "onSuccess: check above for each :"+a.obj.toString());
+                            //s1 = s;
+                            Log.d(TAG, "onSuccess:  s = "+s);
                             db.collection("Objects").document(s).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     Log.d(TAG, "onSuccess: object deleted");
+
                                 }
                             });
 
@@ -77,18 +80,25 @@ public class ChooseAuctionToBeDeleted extends AppCompatActivity {
                                 public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                                     for(DocumentSnapshot documentSnapshot : queryDocumentSnapshots)
                                     {
-                                        User u = documentSnapshot.toObject(User.class);
+                                        u = documentSnapshot.toObject(User.class);
 
-                                        if(u.wishlist.contains(s1))
+                                        if(u.wishlist.contains(s))
                                         {
-                                            u.wishlist.remove(s1);
-                                            u.won.add(s1);
+                                            Log.d(TAG, "onSuccess: wishlist before change = "+u.wishlist.toString());
+                                            Log.d(TAG, "onSuccess: won before change = "+u.won.toString());
 
-                                            Log.d(TAG, "onSuccess: s1 = "+s1);
+                                            u.wishlist.remove(s);
+                                            u.won.add(s);
+
+                                            Log.d(TAG, "onSuccess: wishlist after change = "+u.wishlist.toString());
+                                            Log.d(TAG, "onSuccess: won after change = "+u.won.toString());
+
                                             db.collection("Users").document(documentSnapshot.getId()).set(u).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
                                                     Log.d(TAG, "onSuccess: the whole app is complete");
+                                                    Log.d(TAG, "onSuccess: wishlist after req = "+u.wishlist.toString());
+                                                    Log.d(TAG, "onSuccess: won after req = "+u.won.toString());
                                                 }
                                             });
                                         }
