@@ -35,9 +35,7 @@ public class AddAuction extends AppCompatActivity {
     private DocumentReference docref;
     private DocumentReference docref2;
     private static final String TAG = "AddAuction";
-    private ObjectToBeSold obj;
     private String name,type,desc;
-    private String start, end;
 
     public static final String EXTRA_TEXT = "com.example.auction.EXTRA_TEXT";
 

@@ -29,20 +29,8 @@ class Auction
         this.name = name;
     }
 
-    public String getOrganizer() {
-        return organizer;
-    }
-
-    public void setOrganizer(String organizer) {
-        this.organizer = organizer;
-    }
-
     public List<String> getObj() {
         return obj;
-    }
-
-    public void setObj(List<String> obj) {
-        this.obj = obj;
     }
 
 }

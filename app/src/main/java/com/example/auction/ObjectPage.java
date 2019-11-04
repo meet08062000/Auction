@@ -30,7 +30,6 @@ public class ObjectPage extends AppCompatActivity {
     private Button bid;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore db;
-    private int userBid;
     private String obj,auc;
     private ObjectToBeSold currobj;
 
@@ -189,7 +188,7 @@ public class ObjectPage extends AppCompatActivity {
         });
     }
 
-    void setcurrObj(DocumentSnapshot documentSnapshot)
+    private void setcurrObj(DocumentSnapshot documentSnapshot)
     {
         currobj = documentSnapshot.toObject(ObjectToBeSold.class);
     }

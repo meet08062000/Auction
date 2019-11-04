@@ -12,7 +12,7 @@ class ObjectToBeSold
     public ObjectToBeSold() {
     }
 
-    public ObjectToBeSold(String suction, String name, String desc, int startBid) {
+    public ObjectToBeSold(String auction, String name, String desc, int startBid) {
         this.auction = auction;
         this.name = name;
         this.desc = desc;
@@ -27,22 +27,6 @@ class ObjectToBeSold
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public int getStartBid() {
-        return startBid;
-    }
-
-    public void setStartBid(int startBid) {
-        this.startBid = startBid;
-    }
-
-    public int getCurrBid() {
-        return currBid;
-    }
-
-    public void setCurrBid(int currBid) {
-        this.currBid = currBid;
     }
 
 }

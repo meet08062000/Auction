@@ -17,7 +17,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -35,7 +34,6 @@ public class OrganizerRegistration extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private String fname,lname,email;
     private FirebaseFirestore db;
-    private CollectionReference colref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +41,6 @@ public class OrganizerRegistration extends AppCompatActivity {
         setContentView(R.layout.activity_organizer_registration);
         
         db = FirebaseFirestore.getInstance();
-        colref = db.collection("Organizers");
 
         orgFname=(EditText)findViewById(R.id.firstName);
         orgLname=(EditText)findViewById(R.id.lastName);
