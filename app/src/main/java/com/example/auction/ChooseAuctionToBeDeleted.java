@@ -125,6 +125,8 @@ public class ChooseAuctionToBeDeleted extends AppCompatActivity {
                         onBackPressed();
                     }
                 });
+
+
             }
         });
     }
